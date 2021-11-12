@@ -224,7 +224,11 @@ func (gen *CodeGenerator) GoComplexType(v *ComplexType) {
 			// can't have `element`s in their definitions. Attributes have
 			// `Attr` appended to their names, so they will not collide with
 			// `Value`.
-			content += fmt.Sprintf("\t%s\n", genGoFieldType(v.Base))
+			if _, builtIn := goBuildinType[v.Base]; builtIn {
+				content += fmt.Sprintf("\tValue\t%s\t`xml:\",chardata\"`\n", genGoFieldType(v.Base))
+			} else {
+				content += fmt.Sprintf("\t%s\n", genGoFieldType(v.Base))
+			}
 		}
 
 		content += "}\n"
